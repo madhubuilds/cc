@@ -22,15 +22,25 @@ function App() {
         <TopNav />
         {/* 3D Canvas Layer */}
         <div className="absolute inset-0 z-0">
-          <Canvas shadows camera={{ position: [8, 10, 8], fov: 40 }}>
+          <Canvas
+            shadows
+            orthographic // Instantly flattens the depth to create the isometric grid look
+            camera={{
+              position: [10, 10, 10], // This exact XYZ ratio creates the perfect isometric angle
+              zoom: 80, // In orthographic mode, FOV is disabled. We use zoom instead to frame it.
+            }}
+          >
             <PlazaScene />
             {/* OrbitControls lets you pan and rotate the camera with your mouse/finger */}
             <OrbitControls
               makeDefault
-              minPolarAngle={Math.PI / 4} // Prevents camera from going under the floor
-              maxPolarAngle={Math.PI / 2.2} // Prevents camera from going completely flat
-              maxDistance={15} // Prevents zooming out too far
-              minDistance={5} // Prevents zooming in too close
+              enableDamping
+              // We lock the vertical angle so the user can't ruin the isometric illusion
+              minPolarAngle={Math.PI / 4}
+              maxPolarAngle={Math.PI / 4}
+              // Allow panning and zooming, but limit how far they can scroll away
+              maxZoom={120}
+              minZoom={40}
             />
           </Canvas>
         </div>
